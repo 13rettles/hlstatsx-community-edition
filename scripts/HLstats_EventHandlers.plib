@@ -1307,6 +1307,28 @@ sub doEvent_Frag
 							);
 						}
 					}
+
+					# Add properties to PlayerPlayerAction if enabled
+					foreach $key (keys %properties) {
+						if ($key eq "headshot" && $headshot == 1) {
+							# Headshot is accounted for above
+							next;
+						}
+						&doEvent_PlayerPlayerAction(
+								$killer->{"userid"},
+								$killer->{"uniqueid"},
+								$victim->{"userid"},
+								$victim->{"uniqueid"},
+								$key,
+								$x,
+								$y,
+								$z,
+								$vx,
+								$vy,
+								$vz
+						);
+					}
+
 					$victim->increment("deaths");
 					$victim->increment("session_deaths");
 					$victim->increment("session_skill", $v_skill);

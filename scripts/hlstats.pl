@@ -1343,7 +1343,7 @@ sub getPlayerInfo
 #
 # hash getProperties (string propstring)
 #
-# Parse (key "value") properties into a hash.
+# Parse (key "value") or (bool [bool..]) properties into a hash.
 #
 
 sub getProperties
@@ -1352,9 +1352,9 @@ sub getProperties
 	my %properties;
 	my $dods_flag = 0;
 	
-	while ($propstring =~ s/^\s*\((\S+)(?:(?: "(.+?)")|(?: ([^\)]+)))?\)//) {
-		my $key = $1;
-		if (defined($2)) {
+	while ($propstring =~ s/^\s*\((?:(?:(\S+) "(.+?)")|(?:([^\)]+)))?\)//) {
+		if (defined($1) && defined($2)) {
+			my $key = $1;
 			if ($key eq "player") {
 				if ($dods_flag == 1) {
 					$key = "player_a";
@@ -1363,14 +1363,14 @@ sub getProperties
 					$key = "player_b";
 				}
 			}
+			if ($key eq "flagindex") {
+				$dods_flag++;
+			}
 			$properties{$key} = $2;
 		} elsif (defined($3)) {
-			$properties{$key} = $3;
-		} else {
-			$properties{$key} = 1; # boolean property
-		}
-		if ($key eq "flagindex") {
-			$dods_flag++;
+			foreach my $key (split ' ', $3) {
+				$properties{$key} = 1; # boolean property
+			}
 		}
 	}
 	
