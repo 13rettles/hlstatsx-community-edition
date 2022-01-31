@@ -12,3 +12,9 @@ To generate heatmaps:
 	- run: php generate.php
 
 report problems to hlx forums or irc
+
+To create an overview map: https://developer.valvesoftware.com/wiki/Creating_a_working_mini-map
+
+To batch resize files to jpgs (useful for dds files in resource/overviews), install the .scm into the GIMP scripts dir and execute `gimp -i -b '(resize "path/to/resource/overviews/filename.dds" "filename.jpg")' -b '(gimp-quit 0)'`
+
+The xoffset value is calculated by: `xoffset = 128 * scale - pos_x`
