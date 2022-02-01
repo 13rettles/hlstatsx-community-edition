@@ -12,3 +12,6 @@ To generate heatmaps:
 	- run: php generate.php
 
 report problems to hlx forums or irc
+
+Updated via:
+cp ~/Library/Application\ Support/Steam/steamapps/common/Counter-Strike\ Global\ Offensive/csgo/resource/overviews/* heatmaps/src/csgo/overviews/
