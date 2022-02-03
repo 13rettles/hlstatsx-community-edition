@@ -2909,7 +2909,7 @@ while ($loop = &getLine()) {
 					);
 				}
 			}
-		} elsif ($s_output =~ /^"(.+?(?:<.+?>)*?)" ([a-zA-Z,_\s]+) "(.+?)"(.*)$/) {
+		} elsif ($s_output =~ /^"(.+?(?:<.+?>)*?)" ([a-zA-Z0-9\.\-,_\s]+) "(.+?)"(.*)$/) {
 			# Prototype: "player" verb "obj_a"[properties]
 			# Matches:
 			#  1. Connection
@@ -2917,6 +2917,7 @@ while ($loop = &getLine()) {
 			#  5. Team Selection
 			#  6. Role Selection
 			#  7. Change Name
+			# 10. PlayerPlayer Actions
 			# 11. Player Objectives/Actions
 			# 14. a) Chat; b) Team Chat
 			
@@ -3078,6 +3079,33 @@ while ($loop = &getLine()) {
 						$playerinfo->{"userid"},
 						$playerinfo->{"uniqueid"},
 						$ev_obj_a
+					);
+				}
+			} else {
+				# PlayerPlayerActions
+				my $playerinfo = &getPlayerInfo($ev_player, 1);
+				my $victiminfo = &getPlayerInfo($ev_obj_a, 1);
+				if ($playerinfo && $victiminfo) {
+					$ev_type = 10;
+					if ($ev_verb =~ /(\S+ for \d+)\.\d+ by/) {
+						$ev_verb = $1;
+						# Swap player and victim
+						($playerinfo, $victiminfo) = ($victiminfo, $playerinfo);
+					}
+
+					$ev_status = &doEvent_PlayerPlayerAction(
+						$playerinfo->{"userid"},
+						$playerinfo->{"uniqueid"},
+						$victiminfo->{"userid"},
+						$victiminfo->{"uniqueid"},
+						$ev_verb,
+						undef,
+						undef,
+						undef,
+						undef,
+						undef,
+						undef,
+						undef
 					);
 				}
 			}

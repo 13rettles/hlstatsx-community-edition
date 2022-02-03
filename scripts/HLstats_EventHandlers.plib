@@ -1487,9 +1487,7 @@ sub doEvent_PlayerPlayerAction
 	my $victim = lookupPlayer($s_addr, $victimId, $victimUniqueId);
 	my $playerstr = &getPlayerInfoString($player, $playerId);
 	my $victimstr = &getPlayerInfoString($victim, $victimId);
-	if ($playerId == $victimId) {
-		$desc = "(IGNORED) PLAYER SAME AS VICTIM: ";
-	} elsif ($g_servers{$s_addr}->{num_trackable_players} < $g_servers{$s_addr}->{minplayers}) {
+	if ($g_servers{$s_addr}->{num_trackable_players} < $g_servers{$s_addr}->{minplayers}) {
 		$desc = "(IGNORED) NOTMINPLAYERS: ";
 	} elsif (checkBonusRound()) {
 		$desc = "(IGNORED) BonusRound: ";
