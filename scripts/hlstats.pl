@@ -2911,7 +2911,8 @@ while ($loop = &getLine()) {
 			$ev_obj_a  = $6;
 			
 			if ($ev_verb eq "committed suicide with") {
-				my $playerinfo = &getPlayerInfo($ev_player, 1);
+				# CS:GO don't create the user since suicides can appear as a result of a disconnect.
+				my $playerinfo = &getPlayerInfo($ev_player, 0);
 				
 				$ev_type = 4;
 				

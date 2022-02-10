@@ -606,7 +606,7 @@ sub flushDB
 	} elsif (($::g_stdin == 1) && ($self->{last_update} > 0))  {
 		$add_connect_time = $::ev_unixtime - $self->{last_update};
 	} 
-	if (($::g_stdin == 1) && ($add_connect_time > 600))  {
+	if (($::g_stdin == 1) && ($add_connect_time > 21600))  {
 		$self->{last_update} = $::ev_unixtime;
 		$add_connect_time = 0;
 	} 
