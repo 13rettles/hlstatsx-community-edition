@@ -3230,6 +3230,7 @@ INSERT INTO `hlstats_Games_Defaults` (`code`, `parameter`, `value`) VALUES
 ('csgo', 'TKPenalty', '25'),
 ('csgo', 'TrackServerLoad', '1'),
 ('csgo', 'UpdateHostname', '1'),
+('csgo', 'WeaponRegex', '^(knife|usp_silencer|m4a1_silencer)_.+'),
 ('dinodday', 'Admins', ''),
 ('dinodday', 'AutoBanRetry', '0'),
 ('dinodday', 'AutoTeamBalance', '0'),
@@ -6677,7 +6678,8 @@ INSERT INTO `hlstats_Servers_Config_Default` (`parameter`, `value`, `description
 ('TKPenalty', '50', 'Penalty for a team kill (Default: 50 points).'),
 ('TrackServerLoad', '1', 'Saves every 5 min how much players are playing on the server.'),
 ('UpdateHostname', '1', 'Toggles auto-update of server name from hostname cvar 1=on(default) 0=off'),
-('PlayerEventsCommandHint', 'hlx_sm_hint', 'The command to display "hint" style messages for ATB switches. Default is "".');
+('PlayerEventsCommandHint', 'hlx_sm_hint', 'The command to display "hint" style messages for ATB switches. Default is "".'),
+('WeaponRegex', '', 'Regex search and replace weapon names. Default is "".');
 -- --------------------------------------------------------
 
 --

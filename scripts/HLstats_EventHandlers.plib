@@ -1090,12 +1090,6 @@ sub doEvent_Frag
 			} elsif ($g_servers{$s_addr}->{play_game} == TFC() && $weapon eq "headshot") {
 				$weapon = "sniperrifle";
 				$headshot = 1;
-			} elsif ($g_servers{$s_addr}->{play_game} == FOF()) {
-				# strip off the 2 at the end of some weapon names in FoF so weapon is right hand is counted the same as same weapon in the left hand
-				$weapon =~ s/2$//;
-				if ($weapon eq "bow") {
-					$weapon = "arrow";
-				}
 			} elsif ($g_servers{$s_addr}->{play_game} == PVKII()) {
 				if (defined($properties{killerclass})) {
 					my $krole = $properties{killerclass};
@@ -1133,6 +1127,8 @@ sub doEvent_Frag
 					);
 				}
 			}
+
+			fixWeapon(\$weapon);
 			
 			# if plugin marked next kill as headshot for this player, headshot
 			if ($g_servers{$s_addr}->{nextkillheadshot} == $killer->{playerid}) {
@@ -1469,6 +1465,27 @@ sub doEvent_Frag
 	$g_servers{$s_addr}->{nextkillheadshot} = 0;
 
 	return $desc . $killerstr . " killed " . $victimstr . " with \"".$weapon."\"";
+}
+
+sub fixWeapon
+{
+	my $ref_weapon = shift;
+
+	if ($g_servers{$s_addr}->{play_game} == FOF()) {
+		# strip off the 2 at the end of some weapon names in FoF so weapon is right hand is counted the same as same weapon in the left hand
+		$$ref_weapon =~ s/2$//;
+		if ($$ref_weapon eq "bow") {
+			$$ref_weapon = "arrow";
+		}
+	}
+
+	# Regex match to fix weapons
+	if ($g_servers{$s_addr}->{weapon_regex} ne "") {
+		my $re = qr/$g_servers{$s_addr}->{weapon_regex}/;
+		if ($$ref_weapon =~ $re) {
+			$$ref_weapon = $1;
+		}
+	}
 }
 
 
@@ -3009,10 +3026,7 @@ sub doEvent_Statsme
 		{
 			$desc = "(IGNORED) BOT: ";
 		} else {
-		
-			if ($weapon eq "bow") {
-				$weapon = "arrow";
-			}
+			fixWeapon(\$weapon);
 
 			if ($shots>0) 
 			{
@@ -3097,12 +3111,8 @@ sub doEvent_Statsme2
 		{
 			$desc = "(IGNORED) BOT: ";
 		} else {
-			if ($g_servers{$s_addr}->{play_game} == FOF()) {
-				$weapon =~ s/2$//;
-				if ($weapon eq "bow") {
-					$weapon = "arrow";
-				}
-			}
+			fixWeapon(\$weapon);
+
 			&recordEvent("Statsme2", 0,
 				$player->{playerid},
 				$weapon,

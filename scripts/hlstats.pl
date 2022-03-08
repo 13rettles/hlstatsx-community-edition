@@ -2142,6 +2142,7 @@ while ($loop = &getLine()) {
 				$std_cfg{"UpdateHostname"}					= 0;
 				$std_cfg{"ConnectAnnounce"}					= 1;
 				$std_cfg{"DefaultDisplayEvents"}			= 1;
+				$std_cfg{"WeaponRegex"}						= "";
 				%{$g_config_servers{$s_addr}}				= %std_cfg;
 				&printEvent("CFG", "Created default config for unknown server [$s_addr]");
 				&printEvent("DETECT", "New server with game: " . &getServerMod($s_peerhost, $s_peerport));
@@ -2154,6 +2155,7 @@ while ($loop = &getLine()) {
 				my %s_cfg = %{$g_config_servers{$s_addr}};
 				$g_servers{$s_addr}->set("minplayers", $s_cfg{"MinPlayers"});
 				$g_servers{$s_addr}->set("hlstats_url", $s_cfg{"HLStatsURL"});
+				$g_servers{$s_addr}->set("weapon_regex", $s_cfg{"WeaponRegex"});
 				if ($s_cfg{"DisplayResultsInBrowser"} > 0) {
 					$g_servers{$s_addr}->set("use_browser",  1);
 					&printEvent("SERVER", "Query results will displayed in valve browser", 1); 

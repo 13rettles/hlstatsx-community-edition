@@ -168,6 +168,7 @@ sub new
 	$self->{public_commands}               = 1;
 	$self->{connect_announce}			   = 0;
 	$self->{update_hostname}			   = 0;
+	$self->{weapon_regex}				   = "";
 	
 	$self->{lastblueflagdefend}			   = 0;
 	$self->{lastredflagdefend}			   = 0;
