@@ -2455,7 +2455,7 @@ while ($loop = &getLine()) {
 				(?:<setpos_exact\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d);[^"]*)?
 				)"						# player string with or without l4d-style location coords
 				(?:\s\[(-?\d+)\s(-?\d+)\s(-?\d+)\])?
-				\skilled\s			# verb (ex. attacked, killed, triggered)
+				\skilled(?:\sother)?\s			# verb (ex. attacked, killed, triggered)
 				"(.+?(?:<.+?>)*?
 				(?:<setpos_exact\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d)\s(-?\d+?\.\d\d);[^"]*)?
 				)"						# player string as above or action name
@@ -2469,6 +2469,7 @@ while ($loop = &getLine()) {
 			# Prototype: "player" verb "obj_a" ?... "obj_b"[properties]
 			# Matches:
 			#  8. Kills
+			# 11. Player Action (killed other)
 			
 			$ev_player = $1;
 			$ev_Xcoord = $2; # attacker/player coords (L4D)
@@ -2529,21 +2530,35 @@ while ($loop = &getLine()) {
 				my $victimUniqueId = $victiminfo->{"uniqueid"};
 				my $victim         = lookupPlayer($s_addr, $victimId, $victimUniqueId);
 
-				$ev_status = &doEvent_Frag(
-					$killerinfo->{"userid"},
-					$killerinfo->{"uniqueid"},
-					$victiminfo->{"userid"},
-					$victiminfo->{"uniqueid"},
-					$ev_obj_b,
-					$headshot,
-					$ev_Xcoord,
-					$ev_Ycoord,
-					$ev_Zcoord,
-					$ev_XcoordKV,
-					$ev_YcoordKV,
-					$ev_ZcoordKV,
-					%ev_properties_hash
-				);
+				if ($killer && $victim) {
+					$ev_status = &doEvent_Frag(
+						$killerinfo->{"userid"},
+						$killerinfo->{"uniqueid"},
+						$victiminfo->{"userid"},
+						$victiminfo->{"uniqueid"},
+						$ev_obj_b,
+						$headshot,
+						$ev_Xcoord,
+						$ev_Ycoord,
+						$ev_Zcoord,
+						$ev_XcoordKV,
+						$ev_YcoordKV,
+						$ev_ZcoordKV,
+						%ev_properties_hash
+					);
+				} elsif ($killer) {
+					# For other kills, like chickens
+					$ev_type = 8;
+					$ev_status = &doEvent_PlayerAction(
+						$killerinfo->{"userid"},
+						$killerinfo->{"uniqueid"},
+						"killed_".$victiminfo->{"name"},
+						$ev_Xcoord,
+						$ev_Ycoord,
+						$ev_Zcoord,
+						%ev_properties_hash
+					);
+				}
 			} 
 		} elsif ($g_servers{$s_addr}->{play_game} == L4D() && $s_output =~ /^
 				\(INCAP\)		# l4d prefix, such as (DEATH) or (INCAP)
